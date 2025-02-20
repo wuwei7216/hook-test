@@ -1,43 +1,29 @@
-import { useRef } from 'react';
-import { useEffect } from 'react';
-import React from 'react';
-import { useImperativeHandle } from 'react';
+import { useEffect, useLayoutEffect, useState } from "react";
 
-interface RefProps {
-  aaa: () => void;
+async function queryData() {
+  const data = await new Promise<number>((resolve) => {
+    setTimeout(() => {
+      resolve(666);
+    }, 2000);
+  })
+  return data;
 }
-
-const Guang: React.ForwardRefRenderFunction<RefProps> = (props, ref) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useImperativeHandle(ref, () => {
-    return {
-      aaa() {
-        inputRef.current?.focus();
-      }
-    }
-  }, [inputRef]);
-
-  return <div>
-    <input ref={inputRef}></input>
-  </div>
-}
-
-const WrapedGuang = React.forwardRef(Guang);
 
 function App() {
-  const ref = useRef<RefProps>(null);
- 
-  useEffect(()=> {
-    console.log('ref', ref.current)
-    ref.current?.aaa();
+  const [num, setNum] = useState(0);
+  
+  useLayoutEffect(() => {
+    queryData().then(data => {
+      setNum(data);
+    })
   }, []);
 
   return (
-    <div className="App">
-      <WrapedGuang ref={ref}/>
-    </div>
+    <div onClick={(e) => {
+      setNum((prevNum) => prevNum + 1)
+    }}>{num}</div>
   );
 }
 
 export default App;
+
