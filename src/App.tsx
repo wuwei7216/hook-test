@@ -1,29 +1,26 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { ChangeEvent } from "react"
 
-async function queryData() {
-  const data = await new Promise<number>((resolve) => {
-    setTimeout(() => {
-      resolve(666);
-    }, 2000);
-  })
-  return data;
-}
-
+// 非受控
 function App() {
-  const [num, setNum] = useState(0);
-  
-  useLayoutEffect(() => {
-    queryData().then(data => {
-      setNum(data);
-    })
-  }, []);
 
-  return (
-    <div onClick={(e) => {
-      setNum((prevNum) => prevNum + 1)
-    }}>{num}</div>
-  );
+  function onChange(event: ChangeEvent<HTMLInputElement>) {
+    console.log(event.target.value);
+  }
+
+  // 还可以通过ref获取value，也是非受控
+  return <input defaultValue={'guang'} onChange={onChange}/>
 }
 
-export default App;
+// 受控
+// function App() {
 
+//   const [value, setValue] = useState('guang');
+
+//   function onChange(event: ChangeEvent<HTMLInputElement>) {
+//     console.log(event.target.value);
+//     // setValue(event.target.value);
+//   }
+
+//   return <input value={value} onChange={onChange}/>
+// }
+export default App
